@@ -1,0 +1,82 @@
+<ion-view title="{{vm.deptName}}" class="manager-approval-flow" cache-view="false">
+	<ion-nav-buttons side="right">
+        <button class="button button-clear button-icon ion-android-more-vertical" on-tap="vm.showContextMenu()"></button>
+	</ion-nav-buttons>
+    <div class="bar bar-subheader mngr-aprvl-item-list-header  item-divider">
+		<div class=" mngr-aprvl-item-list-subheader">{{::vm.itemsText}}</div>
+		<div class="mngr-aprvl-item-qty">{{vm.deptQty }}</div>
+	</div>
+	<ion-content class="has-subheader" over-flow-scroll="true">
+	  <!--  	<ion-scroll class = "manager-approval-scroll-container" direction="y" delegate-handle="manager-approval-content"> -->
+	    	<ion-list class="item-padding-adjust">
+			 <ion-item class ="manager-approval-item" bindonce ng-repeat="item in vm.itemList" >
+			 	
+			<div class="row mngr-aprvl-item-desc"><span bindonce class="alert-icon">
+                <i ng-if="item.isPriceChangeDriven === true || item.isPriceChangeDriven === 'true' " class="icon price-change-indicator"></i>
+            </span>{{::item.desc }}</div>	
+			<div class="row-space"></div>				
+			 <div class="row">
+				<div class="col col-90"> 
+					<div class="row subdued mngr-aprvl-sub-headers-text">
+						<div class="col-15 center-align">{{::vm.onHands}}</div>
+						<div class="col-35 center-align">{{::vm.newOnHands}}</div>															
+						<div class="col-30 center-align">{{::vm.qtyAdjusted}}</div>
+						<div class="col-20 center-align">{{::vm.dollarAdj}}</div>																																										
+					</div>
+				</div> 
+			</div>
+			<div class="row">
+				<div class="col col-90"> 
+					<div class="row subdued mngr-aprvl-sub-headers-value">
+						<div class="col-15 center-align">{{::item.onHand}}</div>
+						<div class="col-35 center-align">{{::item.newOnHand}}</div>															
+						<div class="col-30 center-align" ng-class = "(item.onHand>item.newOnHand)? 'color-red' : ''">{{::item.adjOnHand}}</div>
+						<div class="col-20 center-align" ng-class = "(item.onHand>item.newOnHand)? 'color-red' : ''">{{::vm.moneySymbol}}{{::item.dollarAdjValue}}</div>	
+					</div>
+				</div> 
+			</div>
+			<div class="row-space"></div>
+			<div class="row details-text-row">
+			 <div class="col-35" >
+			<div class="row subdued details-text"><span class = "icon mgr-aprvl-details-header-text" ng-click = "vm.showToggle(item.showDetails, $index)">{{::vm.details}}</span></div>
+			<div class="row details-icon"><span class = "icon ion-arrow-down-b details-icon"  ng-class = "{'ion-arrow-down-b' : item.downarrow, 'ion-arrow-up-b' : item.uparrow}" ng-click = "vm.showToggle(item.showDetails, $index)"></span></div>
+			</div>
+			<div class="button-bar bar-royal button-bar-manager-approval" > 
+        <button
+		ng-class="item.btnActionArray[0] ? 'button-custom button-no-action button-no-action-selected' : 'button-custom button-no-action'"
+		ng-click="vm.changeSelected(item.btnActionArray,0, item.dollarAdjValue)">
+		<span ng-show="item.btnActionArray[0]"></span>{{::vm.noActionBtnTxt}}
+	</button>
+	<button 
+		ng-class="item.btnActionArray[1] ? 'button-custom button-deny button-deny-selected'  : 'button-custom button-deny'"
+		ng-click="vm.changeSelected(item.btnActionArray,1,item.dollarAdjValue)">
+		<span ng-show="item.btnActionArray[1]"></span>{{::vm.denyBtnTxt}}
+	</button>
+	<button 
+		ng-class="item.btnActionArray[2] ? 'button-custom button-approve button-approve-selected' : 'button-custom button-approve'"
+		ng-click="vm.changeSelected(item.btnActionArray,2,item.dollarAdjValue)">
+		<span ng-show="item.btnActionArray[2]"></span>{{::vm.approveBtnTxt}}
+	</button>
+    </div> 
+    </div>
+    <div  class = "mgr-aprvl-details-text" ng-if="item.showDetails" >
+    <div class="row"><span class="item-details-sub-header" >{{::vm.item}} </span><span class = "">{{::item.itemNbr}}</span></div>	
+    <div class="row"><span class="item-details-sub-header " >{{::vm.upc}} </span><span class = "">{{::item.gtin}}</span></div>
+    <div class="row-space"></div>
+    <div class="row"><span class="item-details-sub-header" >{{::vm.sfCount}}</span><span class = "item-details-value">{{::item.sfCount}}</span></div>							
+	<div class="row">by {{::item.sfCompletedBy}} at {{::item.sfCompletedTime}}</div>
+	<div class="row-space"></div>
+	<div class="row"><span class="item-details-sub-header" >{{::vm.bckrmCount}}</span><span class = "item-details-value">{{::item.bckRmCount}}</span></div>							
+	<div class="row">by {{::item.bckRmCompletedBy}} at {{::item.bckRmCompletedTime}}</div>
+	<div class="row-space"></div>
+	<div class="row"><span class="item-details-sub-header" >{{::vm.cmpltd}}</span> </div>							
+	<div class="row">by {{::item.countsCompletedBy}}</div>
+    </div>  
+			</ion-item>
+		</ion-list>
+    <!-- </ion-scroll>	 -->   	 
+    </ion-content>
+    <ion-footer-bar class="manager-approval-btn-footer">
+			<button class="button button-walmart-green button-block manager-approval-btn" on-tap="vm.finalize()">{{::vm.finalizeCaps}} <span class="mngr-aprvl-total-dollar-val" >{{::vm.moneySymbol}}{{vm.totalDollarAdjVal}}</span></button>
+			</ion-footer-bar>
+</ion-view>
